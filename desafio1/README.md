@@ -90,6 +90,8 @@ CustomerRepository extende a interfaz CrudRepository.
 - EmpresaController
 - PessoaController
 #### Service
+- EmpresaService
+- PessoaService
 - Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
