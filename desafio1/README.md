@@ -7,26 +7,34 @@ c) Implementar cobertura de 70% de testes unitários
 Spring Boot 3 / Java 17 / Maven / Tomcat / IntelliJ IDEA 2023
 ### Livrarias e dependências
 - springfox-boot-starter
-- spring-boot-starter-data-jpa: JPA (Java Persistence API) para armazenar dadod em um banco de dados relacional. Usada para criar automaticamente implementaçoes de repositórios, de uma interfaz de repositório.
+- spring-boot-starter-data-jpa: JPA (Java Persistence API) para armazenar dadod em um banco de dados relacional. Usada para criar automaticamente implementações de repositórios, de uma interfaz de repositório.
 CustomerRepository extende a interfaz CrudRepository.
-- spring-boot-starter-web Implementaçao motor web Tomcat e Restful API
+- spring-boot-starter-web Implementação motor web Tomcat e Restful API
 - spring-boot-devtools: Ferramentas de desenvolvimento
 - spring-boot-starter-test
-- spring-boot-starter-validation: Validaçoes para aplicar nos dados de entrada
+- spring-boot-starter-validation: Validações para aplicar nos dados de entrada
 - springdoc-openapi-starter-webmvc-ui
 - com.h2database: h2 Banco de dados relacional
-- lombok:
-- springfox-swagger-ui: Interfaz Swagger para fazer as provas
-- junit:
-- junit-jupiter-api:
-- modelmapper:
-
-
-
-
-a lógica e métodos usados, os avanços realizados,
-e os pendentes para aperfeiçoar o miniprojeto, para um
-futuro (To-Do)
+- lombok: Ferramenta para modificar
+- springfox-swagger-ui: Interfaz Swagger para fazer as provas API REST
+- junit & junit-jupiter-api: Para testes unitários
+- modelmapper: Para usar nos DTO's
+### Classes e interfazes
+#### Entity
+- Empresa
+- Pessoa
+- Usuário
+#### DTO
+- EmpresaDto
+- PessoaDto
+#### Controller
+- EmpresaController
+- PessoaController
+#### Repository
+- EmpresaRepository
+- PessoaRepository
+#### Service
+- Desafio1Application: Inicializador da aplicação
+### To-Do
+- Aperfeiçoar as provas unitárias
 ## [Desafio 1:](../../tree/main/desafio1)
-### User Story: Pré-cadastro de clientes
-
