@@ -48,7 +48,7 @@ CustomerRepository extende a interfaz CrudRepository.
     - nome String, em BD length = 50, nullable = false, name = "nome". Nome da pessoa usuária, texto de até 50 caracteres.
     - email String, em BD length = 100, nullable = false, name = "email". Email do contato do estabelecimento, texto de até 100 caracteres. A validação requerida usa uma expressão regular para validação:
      "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\.]+)\\.([a-zA-Z]{2,5})$") mas os relatos dos usuários indicaram defeitos. A regex utilizada se define na DTO
-    - dataCadastro LocalDateTime, em BD nullable = false, name="datacadastro". Data do cadastro gerado com a data e hora do sistema
+    - dataCadastro LocalDateTime, em BD nullable = false, name="datacadastro". Data do cadastro gerado com a data e hora do sistema.
   - Métodos principais
     - private String gerarUuid() retorna um objeto UUID aleatório convertido em String
     - public Pessoa é um construtor do objeto, asignando um valor 0 ao id, uuid do método anterior, data do relógio do sistema, e os campos procedentes do DTO no uso
@@ -92,7 +92,14 @@ CustomerRepository extende a interfaz CrudRepository.
     - public Empresa atualizar(EmpresaDto empresaDto, String uuid). A partir do objeto EmpresaDto validado, o método procura no BD se já existe com o UUID fornecido. Se não existe, retorna uma mensagem de empresa não existente. Se existe o UUID, se consulta a coincidência dos CNPJ para continuar com a atualização no BD do registro. Se o CNPJ é diferente daquele que se tenta atualizar retorna uma mensagem de CNPJ diferentes.
     - public Iterable<Empresa> listaEmpresa(). Retorna um recordset das empresas armazenadas no BD
     - public Optional<Empresa> buscarPorUuid(). Retorna um recordset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
-    - public void removerPorUuid(). Elimina o recoo=rdset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
+    - public void removerPorUuid(). Elimina o recordset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
+- PessoaService: serviço que trabalha com o repositório PessoaRepository e contém a lógica para armazenar o objeto.
+  - Métodos principais
+    - public Empresa salvar: A partir do objeto Empresa passado, o método procura no BD se já existe com o CNPJ fornecido. Se não existe, guarda o objeto. Caso contrário, manda uma mensagem de empresa repetida
+    - public Empresa atualizar(EmpresaDto empresaDto, String uuid). A partir do objeto EmpresaDto validado, o método procura no BD se já existe com o UUID fornecido. Se não existe, retorna uma mensagem de empresa não existente. Se existe o UUID, se consulta a coincidência dos CNPJ para continuar com a atualização no BD do registro. Se o CNPJ é diferente daquele que se tenta atualizar retorna uma mensagem de CNPJ diferentes.
+    - public Iterable<Pessoa> listaEmpresa(). Retorna um recordset das empresas armazenadas no BD
+    - public Optional<Pessoa> buscarPorUuid(). Retorna um recordset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
+    - public void removerPorUuid(). Elimina o recordset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
 - PessoaService: serviço que trabalha com o repositório PessoaRepository e contém a lógica para armazenar o objeto.
 #### Controller
 - EmpresaController
