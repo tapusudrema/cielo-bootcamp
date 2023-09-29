@@ -37,12 +37,43 @@ CustomerRepository extende a interfaz CrudRepository.
   - Métodos principais
     - private String gerarUuid() retorna um objeto UUID aleatório convertido em String
     - public Empresa é um construtor do objeto, asignando um valor 0 ao id, uuid do método anterior, data do relógio do sistema, e os campos procedentes do DTO no uso
+    - public String toStringE() retorna os campos do objeto como uma linha de texto
     
-- Pessoa
-- Usuario
+- Pessoa: classe final que extende a classe Usuario, definindo o objeto Pessoa. O objeto criado se armazenará no banco de dados H2
+  - Características do objeto e do seu respectivo campo no BD
+    - id inteiro autogerado em BD
+    - uuid String, em BD: length = 36, nullable = false, name = "uuid". O UUID será usado em combinaçao com o CPF como chave par única, UUID tem maior complexidade que o ID autogerado, dando mais segurança.
+    - cpf String, em BD length = 11, nullable = false, name = "cpf". CPF da pessoa formatado com zeros à esquerda totalizando 11 dígitos. Usado na lógica como chave. Não é aplicado um algoritmo de validação.
+    - mcc String, em BD length = 4, nullable = false, name = "mcc". MCC - “Merchant Category Code“ tem até 4 dígitos.
+    - nome String, em BD length = 50, nullable = false, name = "nome". Nome da pessoa usuária, texto de até 50 caracteres.
+    - email String, em BD length = 100, nullable = false, name = "email". Email do contato do estabelecimento, texto de até 100 caracteres. A validação requerida usa uma expressão regular para validação:
+     "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\.]+)\\.([a-zA-Z]{2,5})$") mas os relatos dos usuários indicaram defeitos. A regex utilizada se define na DTO
+    - dataCadastro LocalDateTime, em BD nullable = false, name="datacadastro". Data do cadastro gerado com a data e hora do sistema
+  - Métodos principais
+    - private String gerarUuid() retorna um objeto UUID aleatório convertido em String
+    - public Pessoa é um construtor do objeto, asignando um valor 0 ao id, uuid do método anterior, data do relógio do sistema, e os campos procedentes do DTO no uso
+    - public String toStringC() retorna os campos do objeto como uma linha de texto
+- Usuario: classe com dois herdeiros.
 #### DTO
-- EmpresaDto
-- PessoaDto
+- EmpresaDto: classe reduzida da clase Empresa, usada para validar os dados que foram inseridos na API
+  - Características do objeto e de suas respectivas validações e RegEx. Tomam os tipos e limites dos campos análogos da classe que reduz.
+    - cnpj @NotBlank(message = "CNPJ de 14 números obrigatório.") @Size(max = 14) @Pattern(regexp = "(\\d{1,14})", message = "o CNPJ nao é válido.")
+    - razaosocial @NotBlank(message = "Razao social obrigatória.")
+    - mcc @NotBlank(message = "MCC obrigatório.") @Pattern(regexp = "\\b([0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])\\b")
+    - cpf @NotBlank(message = "CPF do contato obrigatório.") @Size(max = 11) @Pattern(regexp = "(\\d{1,11})", message = "o CNPJ nao é válido.")
+    - nomecontato @NotBlank(message = "Nome do contato obrigatório.")
+    - email @NotBlank(message = "Email obrigatório.") @Pattern(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\\.)+[A-Z]{2,6}$", flags = {Flag.CASE_INSENSITIVE, Flag.MULTILINE}, message = "o email nao é válido.")
+  - Método principal
+    - public toEmpresa() retorna um objeto do tipo Empresa passando os campos depois da validação (cnpj, razaosocial, mcc, cpf, nomecontato, email)
+- PessoaDto: classe reduzida da clase Pessoa, usada para validar os dados que foram inseridos na API
+    - Características do objeto e de suas respectivas validações e RegEx. Tomam os tipos e limites dos campos análogos da classe que reduz.
+    - mcc @NotBlank(message = "MCC obrigatório.") @Pattern(regexp = "\\b([0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])\\b")
+    - cpf @NotBlank(message = "CPF da pessoa obrigatório.") @Size(max = 11) @Pattern(regexp = "(\\d{1,11})", message = "o CNPJ nao é válido.")
+    - nome @NotBlank(message = "Nome da pessoa obrigatório.")
+    - email @NotBlank(message = "Email obrigatório.") @Pattern(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\\.)+[A-Z]{2,6}$", flags = {Flag.CASE_INSENSITIVE, Flag.MULTILINE}, message = "o email nao é válido.")
+  - Método principal
+    - public toPessoa() retorna um objeto do tipo Pessoa passando os campos depois da validação (cpf, mcc, nome, email)
+
 #### Controller
 - EmpresaController
 - PessoaController
@@ -53,7 +84,7 @@ CustomerRepository extende a interfaz CrudRepository.
 - Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
-- ///
+- Validar se o CPF atende as normas brasileiras de contruçao de tal cadastro
+- Otimizar o uso de métodos comuns
 - Aperfeiçoar os testes unitários
-- Aperfeiçoar as provas unitárias
 ## [Desafio 1:](../../tree/main/desafio1)
