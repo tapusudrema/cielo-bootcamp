@@ -76,59 +76,10 @@ CustomerRepository extende a interfaz CrudRepository.
   - public Pessoa removerPessoa. Recebe via método DELETE o requerimento com parámetro querystring uuid, e executa a eliminação da pessoa no BD associada ao uuid, com HttpStatus NO_CONTENT.
   - public ResponseEntity\<String\> atualizarPessoa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto PessoaDto validado, e executa a atualização da pessoa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a pessoa ou tenta modificar a chave CPF retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT *e coloca no final da fila*.
 - FilaController: Restcontroller que faz mapeamento das petições para /fila. Os métodos usados são:
-- public String armarResultado(String tipo, String info) {
-        String resultado = "";
-        if(Objects.equals(tipo, "E")) { //Empresa?
-            //buscar empresa
-            Optional<Empresa> empresa = empresaService.buscarPorUuid(info);
-            if (empresa.isPresent()) {
-                resultado = empresa.get().toStringE();
-            }
-        } else { //Pessoa
-            //buscar pessoa
-            Optional<Pessoa> pessoa = pessoaService.buscarPorUuid(info);
-            if (pessoa.isPresent()) {
-                resultado = pessoa.get().toStringC();
-            }
-        }
-        return resultado;
-    }
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public String listaFila(){
-        String resultado = "";
-        // converter a um objeto iterável a fila
-        List<SingledLinkedList.Nodo> listado = Usuario.fila.listar();
-        Usuario.fila.mostrar();
+  - public String armarResultado(String tipo, String info) Contrui um string com os dados extraídos do nodo, que representam o tipo de usuário (E para empresa, P para pessoa) e a info, que é a UUID do usuário. É o par que se usa em cada nodo da fila.
+  - public String listaFila() Recebe via método GET o requerimento e retorna o conjunto de usuários na fila com HttpStatus OK em formato String, usa o método listar do objeto SingledLinkedList para extrair em formato String.
+  - public String avancarFila() Recebe via método GET o requerimento e retorna o primeiro usuário na fila, extraindo dela, com HttpStatus OK em formato String
 
-        // construir um texto com todos os objetos da fila
-
-        for (SingledLinkedList.Nodo nodox : listado) {
-            String tipo = nodox.getTipo();
-            String info = nodox.getInfo();
-            resultado += armarResultado(tipo, info);
-        }
-        return (resultado.isEmpty() ?"Fila vazia!":resultado);
-    }
-
-    @GetMapping("/avancar")
-    @ResponseStatus(HttpStatus.OK)
-    public String avancarFila(){
-        String resultado = "";
-        resultado = Usuario.fila.retirarCabeca();
-        // retorna o conteudo do topo da fila, e retira ele dela
-        if (resultado==null) {
-            resultado = "Fila vazia!";
-        } else {
-            String tipo = resultado.substring(0,1);
-            String info = resultado.substring(1);
-            resultado = armarResultado(tipo, info);
-        }
-        // retorna um string com os dados do usuario do topo da fila
-        return resultado;
-    }
-}
-- 
 #### Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
