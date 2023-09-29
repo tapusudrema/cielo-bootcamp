@@ -90,12 +90,9 @@ CustomerRepository extende a interfaz CrudRepository.
   - Métodos principais
     - public Empresa salvar: A partir do objeto Empresa passado, o método procura no BD se já existe com o CNPJ fornecido. Se não existe, guarda o objeto. Caso contrário, manda uma mensagem de empresa repetida
     - public Empresa atualizar(EmpresaDto empresaDto, String uuid). A partir do objeto EmpresaDto validado, o método procura no BD se já existe com o UUID fornecido. Se não existe, retorna uma mensagem de empresa não existente. Se existe o UUID, se consulta a coincidência dos CNPJ para continuar com a atualização no BD do registro. Se o CNPJ é diferente daquele que se tenta atualizar retorna uma mensagem de CNPJ diferentes.
-    - public Iterable<Empresa> listaEmpresa(){
-        return empresaRepository.findAll();}
-    - public Optional<Empresa> buscarPorUuid(String uuid){
-        return empresaRepository.findByUuid(uuid);    }
-    - public void removerPorUuid(String uuid){
-        empresaRepository.deleteByUuid(uuid)
+    - public Iterable<Empresa> listaEmpresa(). Retorna um recordset das empresas armazenadas no BD
+    - public Optional<Empresa> buscarPorUuid(). Retorna um recordset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
+    - public void removerPorUuid(). Elimina o recoo=rdset da empresa armazenada no BD que coincida com o parámetro UUID de entrada
 - PessoaService: serviço que trabalha com o repositório PessoaRepository e contém a lógica para armazenar o objeto.
 #### Controller
 - EmpresaController
