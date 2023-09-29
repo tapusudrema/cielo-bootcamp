@@ -62,29 +62,73 @@ CustomerRepository extende a interfaz CrudRepository.
     - public void atualizar(String info, String tipo) Percorre a lista para localizar um nodo e atualizar
     - public void mostrar() Percorre a lista devolvendo como String um conjunto de linhas de texto onde cada representa o texto do nodo
     - public List\<Nodo\> listar() Convertir a lista em tipo List para retornar um iterável. Usado apenas com finalidad de *display*
-        List<Nodo> listado = new ArrayList<Nodo>();
-        Nodo atual = cabeca;
-        while (atual != null) {
-            //itera cada nodo consecutivo
-            listado.add(atual);
-            atual = atual.seguinte;
-        }
-        return listado;
-    }
-
 #### Controller
 - EmpresaController: Restcontroller que faz mapeamento das petições para /empresa. Os métodos usados são:
-  - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED
+  - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED *e coloca no final da fila*.
   - public Iterable\<Empresa\> listaEmpresa. Recebe via GET o requerimento e retorna o conjunto de empresas no BD com HttpStatus OK em formato JSON.
   - public Empresa buscarPorUuid. Recebe via método GET o requerimento com parámetro querystring uuid, retorna a empresa no BD com HttpStatus OK em formato JSON.
   - public Empresa removerEmpresa. Recebe via método DELETE o requerimento com parámetro querystring uuid, e executa a eliminação da empresa no BD associada ao uuid, com HttpStatus NO_CONTENT.
-  - public ResponseEntity\<String\> atualizarEmpresa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto EmpresaDto validado, e executa a atualização da empresa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a empresa ou tenta modificar a chave CNPJ retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT.
+  - public ResponseEntity\<String\> atualizarEmpresa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto EmpresaDto validado, e executa a atualização da empresa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a empresa ou tenta modificar a chave CNPJ retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT *e coloca no final da fila*.
 - PessoaController: Restcontroller que faz mapeamento das petições para /pessoa. Os métodos usados são:
-  - public ResponseEntity\<Pessoa\> salvar. Recebe via POST dados como objeto validado PessoaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a pessoa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED
+  - public ResponseEntity\<Pessoa\> salvar. Recebe via POST dados como objeto validado PessoaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a pessoa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED *e coloca no final da fila*.
   - public Iterable\<Pessoa\> listaPessoa. Recebe via GET o requerimento e retorna o conjunto de pessoas no BD com HttpStatus OK em formato JSON.
   - public Pessoa buscarPessoaPorId. Recebe via método GET o requerimento com parámetro querystring uuid, retorna a pessoa no BD com HttpStatus OK em formato JSON.
   - public Pessoa removerPessoa. Recebe via método DELETE o requerimento com parámetro querystring uuid, e executa a eliminação da pessoa no BD associada ao uuid, com HttpStatus NO_CONTENT.
-  - public ResponseEntity\<String\> atualizarPessoa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto PessoaDto validado, e executa a atualização da pessoa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a pessoa ou tenta modificar a chave CPF retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT.
+  - public ResponseEntity\<String\> atualizarPessoa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto PessoaDto validado, e executa a atualização da pessoa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a pessoa ou tenta modificar a chave CPF retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT *e coloca no final da fila*.
+- FilaController: Restcontroller que faz mapeamento das petições para /fila. Os métodos usados são:
+- public String armarResultado(String tipo, String info) {
+        String resultado = "";
+        if(Objects.equals(tipo, "E")) { //Empresa?
+            //buscar empresa
+            Optional<Empresa> empresa = empresaService.buscarPorUuid(info);
+            if (empresa.isPresent()) {
+                resultado = empresa.get().toStringE();
+            }
+        } else { //Pessoa
+            //buscar pessoa
+            Optional<Pessoa> pessoa = pessoaService.buscarPorUuid(info);
+            if (pessoa.isPresent()) {
+                resultado = pessoa.get().toStringC();
+            }
+        }
+        return resultado;
+    }
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public String listaFila(){
+        String resultado = "";
+        // converter a um objeto iterável a fila
+        List<SingledLinkedList.Nodo> listado = Usuario.fila.listar();
+        Usuario.fila.mostrar();
+
+        // construir um texto com todos os objetos da fila
+
+        for (SingledLinkedList.Nodo nodox : listado) {
+            String tipo = nodox.getTipo();
+            String info = nodox.getInfo();
+            resultado += armarResultado(tipo, info);
+        }
+        return (resultado.isEmpty() ?"Fila vazia!":resultado);
+    }
+
+    @GetMapping("/avancar")
+    @ResponseStatus(HttpStatus.OK)
+    public String avancarFila(){
+        String resultado = "";
+        resultado = Usuario.fila.retirarCabeca();
+        // retorna o conteudo do topo da fila, e retira ele dela
+        if (resultado==null) {
+            resultado = "Fila vazia!";
+        } else {
+            String tipo = resultado.substring(0,1);
+            String info = resultado.substring(1);
+            resultado = armarResultado(tipo, info);
+        }
+        // retorna um string com os dados do usuario do topo da fila
+        return resultado;
+    }
+}
+- 
 #### Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
@@ -92,5 +136,4 @@ CustomerRepository extende a interfaz CrudRepository.
 - Otimizar o uso de métodos comuns
 - Utilizar um banco de dados mais poderoso, e tentar usar comandos SQL, para passar a carga de BD para fora da aplicação Java
 - Aperfeiçoar os testes unitários
-## [Desafio 1:](../../tree/main/desafio1)
 
