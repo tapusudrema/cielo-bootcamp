@@ -81,18 +81,52 @@ CustomerRepository extende a interfaz CrudRepository.
     - findByCnpj(String cnpj) retorna um recordset segundo a coincidencia do parámetro cnpj com o campo cnpj na BD
     - deleteByUuid(String uuid) elimina um registro segundo a coincidencia do parámetro uuid com o campo uuid na BD
 - PessoaRepository
-  - Métodos principais
     - findByUuid(String uuid) retorna um recordset segundo a coincidencia do parámetro uuid com o campo uuid na BD
     - findByCpf(String cpf); retorna um recordset segundo a coincidencia do parámetro cpf com o campo cpf na BD
     - findByCnpj(String cnpj) retorna um recordset segundo a coincidencia do parámetro cnpj com o campo cnpj na BD
     - deleteByUuid(String uuid) elimina um registro segundo a coincidencia do parámetro uuid com o campo uuid na BD
+#### Service
+- EmpresaService: serviço que trabalha com o repositório EmpresaRepository e contém a lógica para armazenar o objeto.
+  - Métodos principais
+    - public Empresa salvar(Empresa empresa){
+        Optional<Empresa> optionalEmpresa = empresaRepository.findByCnpj(empresa.getCnpj());
+        if (optionalEmpresa.isPresent()) {
+            if (optionalEmpresa.get().getCnpj() == null) {
+                return empresaRepository.save(empresa);
+            } else {
+                System.out.println("repetida");
+                return null;
+            }
+        } else {
+            return empresaRepository.save(empresa);
+    - public Empresa atualizar(EmpresaDto empresaDto, String uuid) {
+        Optional<Empresa> optionalEmpresa = empresaRepository.findByUuid(uuid);
+        if (optionalEmpresa.isPresent()) {
+            String cnpj = empresaDto.getCnpj();
+            cnpj = ("00000000000000"+cnpj).substring(cnpj.length());
+            if (Objects.equals(optionalEmpresa.get().getCnpj(), cnpj)) { //coincidem uuid & cnpj
+                optionalEmpresa.get().setEmail(empresaDto.getEmail());
+                optionalEmpresa.get().setMcc(empresaDto.getMcc());
+                optionalEmpresa.get().setNomecontato(empresaDto.getNomecontato());
+                return empresaRepository.save(optionalEmpresa.get());
+            } else {
+                System.out.println("diferente cnpj");
+                return null;
+            }
+        } else {
+            System.out.println("nao existe uuid");
+            return null;
+    - public Iterable<Empresa> listaEmpresa(){
+        return empresaRepository.findAll();}
+    - public Optional<Empresa> buscarPorUuid(String uuid){
+        return empresaRepository.findByUuid(uuid);    }
+    - public void removerPorUuid(String uuid){
+        empresaRepository.deleteByUuid(uuid)
+- PessoaService: serviço que trabalha com o repositório PessoaRepository e contém a lógica para armazenar o objeto.
 #### Controller
 - EmpresaController
 - PessoaController
-#### Service
-- EmpresaService
-- PessoaService
-- Desafio1Application: Inicializador da aplicação
+#### Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
 - Validar se o CPF atende as normas brasileiras de contruçao de tal cadastro
