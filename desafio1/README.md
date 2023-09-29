@@ -27,21 +27,14 @@ CustomerRepository extende a interfaz CrudRepository.
     - uuid String, em BD: length = 36, nullable = false, name = "uuid". O UUID será usado em combinaçao com o CNPJ como chave par única, UUID tem maior complexidade que o ID autogerado, dando mais segurança.
     - cnpj String, en BD length = 14, nullable = false, name = "cnpj". O requerimento é que seja numérico, formatado com zeros à esquerda, utilizando 14 caracteres. Usado na lógica como chave.
     Representa o CNPJ de uma empresa. Não é aplicado um algoritmo de validação.
-    - razaosocial String length = 50, nullable = false, name = "razaosocial")
-    private  ;//Razão Social
-    @Column(length = 4, nullable = false, name = "mcc")
-    private String mcc; //MCC - “Merchant Category Code“
-    @Column(length = 11, nullable = false, name = "cpf") //CPF do contato formatado com zeros à esquerda
-    private String cpf;
-    @Column(length = 50, nullable = false, name = "nomecontato")
-    private String nomecontato; //Nome do contato do estabelecimento
-    @Column(length = 100, nullable = false, name = "email")
-    private String email; //Email do contato do estabelecimento
-    //expressão regular para validação: "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\.]+)\\.([a-zA-Z]{2,5})$")
-    //^[A-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\.[A-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[A-Z0-9-]+(?:\.[A-Z0-9-]+)*$
-    //^[\w!#$%&'*+/=?`{|}~^-]+(?:\.[\w!#$%&'*+/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$
-    @Column(nullable = false, name="datacadastro")
-    private LocalDateTime dataCadastro;
+    - razaosocial String, em BD length = 50, nullable = false, name = "razaosocial". Razão Social da empresa
+    - mcc String, em BD length = 4, nullable = false, name = "mcc". MCC - “Merchant Category Code“ tem até 4 dígitos.
+    - cpf String, em BD length = 11, nullable = false, name = "cpf". CPF do contato formatado com zeros à esquerda totalizando 11 dígitos. Não é aplicado um algoritmo de validação.
+    - nomecontato String, em BD length = 50, nullable = false, name = "nomecontato". Nome do contato do estabelecimento, texto de até 50 caracteres.
+    - email String, em BD length = 100, nullable = false, name = "email". Email do contato do estabelecimento, texto de até 100 caracteres. A validação requerida usa uma expressão regular para validação:
+     "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\.]+)\\.([a-zA-Z]{2,5})$") mas os relatos dos usuários indicaram defeitos. A regex utilizada se define na DTO
+    - dataCadastro LocalDateTime, em BD nullable = false, name="datacadastro". Data do cadastro gerado com a data e hora do sistema
+    
     private String gerarUuid(){
         return UUID.randomUUID().toString();
     }
