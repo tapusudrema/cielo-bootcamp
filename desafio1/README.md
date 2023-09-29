@@ -5,6 +5,8 @@ b) implementar na linguagem java utilizando o framework spring boot as APIs mode
 c) Implementar cobertura de 70% de testes unitários
 ### Plataforma
 Spring Boot 3 / Java 17 / Maven / Tomcat / IntelliJ IDEA 2023
+### Interfaz
+Swagger, entrando a (http://localhost:8080/swagger-ui/index.html)
 ### Livrarias e dependências
 - springfox-boot-starter
 - spring-boot-starter-data-jpa: JPA (Java Persistence API) para armazenar dados em um banco de dados relacional. Usada para criar automaticamente implementações de repositórios, de uma interfaz de repositório.
@@ -106,24 +108,12 @@ CustomerRepository extende a interfaz CrudRepository.
   - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED
   - public Iterable\<Empresa\> listaEmpresa. Recebe via GET o requerimento e retorna o conjunto de empresas no BD com HttpStatus OK.
   - public Empresa buscarPorUuid. Recebe via método DELETE o requerimento com parámetro querystring uuid, e executa a eliminação da empresa no BD associada ao uuid, com HttpStatus NO_CONTENT.
-  - public ResponseEntity\<String\> atualizarEmpresa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto EmpresaDto validado, e executa a atualização da empresa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST)
-    
-
-                HttpHeaders responseHeaders = new HttpHeaders();
-                Empresa createdEmpresa = empresaService.atualizar(empresaDto, uuid);
-                if (createdEmpresa == null) {
-                    responseHeaders.set("Error-Update", "Nao existe uuid ou já existe cpf");
-                    return  ResponseEntity.badRequest()
-                            .headers(responseHeaders)
-                            .body(null);
-                } else {
-                    Usuario.fila.atualizar(createdEmpresa.getUuid(),"E");
-                    return new ResponseEntity<>("Atualizado com sucesso",HttpStatus.NO_CONTENT);
-                }
-            }
-        }
-    }
-- PessoaController
+  - public ResponseEntity\<String\> atualizarEmpresa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto EmpresaDto validado, e executa a atualização da empresa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a empresa ou tenta modificar a chave CNPJ retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT.
+- PessoaController: Restcontroller que faz mapeamento das petições para /pessoa. Os métodos usados são:
+  - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED
+  - public Iterable\<Empresa\> listaEmpresa. Recebe via GET o requerimento e retorna o conjunto de empresas no BD com HttpStatus OK.
+  - public Empresa buscarPorUuid. Recebe via método DELETE o requerimento com parámetro querystring uuid, e executa a eliminação da empresa no BD associada ao uuid, com HttpStatus NO_CONTENT.
+  - public ResponseEntity\<String\> atualizarEmpresa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto EmpresaDto validado, e executa a atualização da empresa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST). Se não existe a empresa ou tenta modificar a chave CNPJ retorna mensagem de erro de atualização (BAD REQUEST). Se os dados batem, se atualiza o BD e retorna uma mensagem de succeso com HttpStatus NO_CONTENT.
 #### Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
