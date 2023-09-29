@@ -1,5 +1,5 @@
 # Desafio do Bootcamp Cielo
-## Desafio 1: [Desafio](/desafio1)
+## [Desafio 1:](../../tree/main/desafio1)
 ### User Story: Pré-cadastro de clientes
 ## Desafio 2:
 ### User Story: Fila de atendimento
