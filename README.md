@@ -7,3 +7,4 @@
 ### Technical Debt: Escalabilidade da Fila de atendimento
 ## [Desafio 4:](../../tree/main/desafio4)
 ### Technical Debt: Segurança da Informação
+
