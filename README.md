@@ -2,9 +2,10 @@
 Participante: Luis Ernesto Beingolea Delgado<br>
 Disclaimer: Nunca programei em Java nem OOP.<br>
 Em cada um dos desafios existe um read.me explicando
-a lógica utilizada para cada, os avanços realizados,
+a plataforma e livraria utilizada para cada,
+a lógica e métodos usados, os avanços realizados,
 e os pendentes para aperfeiçoar o miniprojeto, para um
-futuro (ToDo)
+futuro (To-Do)
 ## [Desafio 1:](../../tree/main/desafio1)
 ### User Story: Pré-cadastro de clientes
 ## [Desafio 2:](../../tree/main/desafio2)
