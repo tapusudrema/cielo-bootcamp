@@ -102,7 +102,27 @@ CustomerRepository extende a interfaz CrudRepository.
     - public Optional\<Pessoa\> buscarPorUuid(). Retorna um recordset da pessoa armazenada no BD que coincida com o parámetro UUID de entrada.
     - public void removerPorUuid(). Elimina o recordset da pessoa armazenada no BD que coincida com o parámetro UUID de entrada.
 #### Controller
-- EmpresaController
+- EmpresaController: Restcontroller que faz mapeamento das petições para /empresa. Os métodos usados são:
+  - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED
+  - public Iterable\<Empresa\> listaEmpresa. Recebe via GET o requerimento e retorna o conjunto de empresas no BD com HttpStatus OK.
+  - public Empresa buscarPorUuid. Recebe via método DELETE o requerimento com parámetro querystring uuid, e executa a eliminação da empresa no BD associada ao uuid, com HttpStatus NO_CONTENT.
+  - public ResponseEntity\<String\> atualizarEmpresa. Recebe via método PUT o requerimento com parámetro querystring uuid e dados como objeto EmpresaDto validado, e executa a atualização da empresa no BD associada ao uuid. Se a validação do objeto falha, retorna mensagem de erro de atualização por estrutura não apropriada (BAD REQUEST)
+    
+
+                HttpHeaders responseHeaders = new HttpHeaders();
+                Empresa createdEmpresa = empresaService.atualizar(empresaDto, uuid);
+                if (createdEmpresa == null) {
+                    responseHeaders.set("Error-Update", "Nao existe uuid ou já existe cpf");
+                    return  ResponseEntity.badRequest()
+                            .headers(responseHeaders)
+                            .body(null);
+                } else {
+                    Usuario.fila.atualizar(createdEmpresa.getUuid(),"E");
+                    return new ResponseEntity<>("Atualizado com sucesso",HttpStatus.NO_CONTENT);
+                }
+            }
+        }
+    }
 - PessoaController
 #### Desafio1Application: Inicializador da aplicação
 ### To-Do
