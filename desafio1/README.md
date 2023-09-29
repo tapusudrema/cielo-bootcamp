@@ -123,4 +123,3 @@ CustomerRepository extende a interfaz CrudRepository.
 - Otimizar o uso de métodos comuns
 - Utilizar um banco de dados mais poderoso, e tentar usar comandos SQL, para passar a carga de BD para fora da aplicação Java
 - Aperfeiçoar os testes unitários
-## [Desafio 1:](../../tree/main/desafio1)
