@@ -21,9 +21,32 @@ CustomerRepository extende a interfaz CrudRepository.
 - modelmapper: Para usar nos DTO's
 ### Classes e interfazes
 #### Entity
-- Empresa
+- Empresa: classe final que extende a classe Usuario, definindo o objeto Empresa. O objeto criado se armazenará no banco de dados H2
+  - Características do objeto e do seu respectivo campo no BD
+    - id inteiro autogerado em BD
+    - uuid String, em BD: length = 36, nullable = false, name = "uuid". O UUID será usado em combinaçao com o CNPJ como chave par única, UUID tem maior complexidade que o ID autogerado, dando mais segurança.
+    - cnpj String, en BD length = 14, nullable = false, name = "cnpj". O requerimento é que seja numérico, formatado com zeros à esquerda, utilizando 14 caracteres. Usado na lógica como chave.
+    Representa o CNPJ de uma empresa. Não é aplicado um algoritmo de validação.
+    - razaosocial String length = 50, nullable = false, name = "razaosocial")
+    private  ;//Razão Social
+    @Column(length = 4, nullable = false, name = "mcc")
+    private String mcc; //MCC - “Merchant Category Code“
+    @Column(length = 11, nullable = false, name = "cpf") //CPF do contato formatado com zeros à esquerda
+    private String cpf;
+    @Column(length = 50, nullable = false, name = "nomecontato")
+    private String nomecontato; //Nome do contato do estabelecimento
+    @Column(length = 100, nullable = false, name = "email")
+    private String email; //Email do contato do estabelecimento
+    //expressão regular para validação: "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\.]+)\\.([a-zA-Z]{2,5})$")
+    //^[A-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\.[A-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[A-Z0-9-]+(?:\.[A-Z0-9-]+)*$
+    //^[\w!#$%&'*+/=?`{|}~^-]+(?:\.[\w!#$%&'*+/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$
+    @Column(nullable = false, name="datacadastro")
+    private LocalDateTime dataCadastro;
+    private String gerarUuid(){
+        return UUID.randomUUID().toString();
+    }
 - Pessoa
-- Usuário
+- Usuario
 #### DTO
 - EmpresaDto
 - PessoaDto
@@ -36,5 +59,8 @@ CustomerRepository extende a interfaz CrudRepository.
 #### Service
 - Desafio1Application: Inicializador da aplicação
 ### To-Do
+- Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
+- ///
+- Aperfeiçoar os testes unitários
 - Aperfeiçoar as provas unitárias
 ## [Desafio 1:](../../tree/main/desafio1)
