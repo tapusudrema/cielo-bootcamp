@@ -34,10 +34,10 @@ CustomerRepository extende a interfaz CrudRepository.
     - email String, em BD length = 100, nullable = false, name = "email". Email do contato do estabelecimento, texto de até 100 caracteres. A validação requerida usa uma expressão regular para validação:
      "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\.]+)\\.([a-zA-Z]{2,5})$") mas os relatos dos usuários indicaram defeitos. A regex utilizada se define na DTO
     - dataCadastro LocalDateTime, em BD nullable = false, name="datacadastro". Data do cadastro gerado com a data e hora do sistema
+  - Métodos principais
+    - private String gerarUuid() retorna um objeto UUID aleatório convertido em String
+    - public Empresa é um construtor do objeto, asignando um valor 0 ao id, uuid do método anterior, data do relógio do sistema, e os campos procedentes do DTO no uso
     
-    private String gerarUuid(){
-        return UUID.randomUUID().toString();
-    }
 - Pessoa
 - Usuario
 #### DTO
