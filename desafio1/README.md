@@ -55,7 +55,7 @@ CustomerRepository extende a interfaz CrudRepository.
     - public String toStringC() retorna os campos do objeto como uma linha de texto
 - Usuario: classe com dois herdeiros.
 #### DTO
-- EmpresaDto: classe reduzida da clase Empresa, usada para validar os dados que foram inseridos na API
+- EmpresaDto: classe reduzida da clase Empresa, usada para validar os dados obrigatórios que foram inseridos na API
   - Características do objeto e de suas respectivas validações e RegEx. Tomam os tipos e limites dos campos análogos da classe que reduz.
     - cnpj @NotBlank(message = "CNPJ de 14 números obrigatório.") @Size(max = 14) @Pattern(regexp = "(\\d{1,14})", message = "o CNPJ nao é válido.")
     - razaosocial @NotBlank(message = "Razao social obrigatória.")
@@ -65,7 +65,7 @@ CustomerRepository extende a interfaz CrudRepository.
     - email @NotBlank(message = "Email obrigatório.") @Pattern(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\\.)+[A-Z]{2,6}$", flags = {Flag.CASE_INSENSITIVE, Flag.MULTILINE}, message = "o email nao é válido.")
   - Método principal
     - public toEmpresa() retorna um objeto do tipo Empresa passando os campos depois da validação (cnpj, razaosocial, mcc, cpf, nomecontato, email)
-- PessoaDto: classe reduzida da clase Pessoa, usada para validar os dados que foram inseridos na API
+- PessoaDto: classe reduzida da clase Pessoa, usada para validar os dados obrigatórios que foram inseridos na API
   - Características do objeto e de suas respectivas validações e RegEx. Tomam os tipos e limites dos campos análogos da classe que reduz.
     - mcc @NotBlank(message = "MCC obrigatório.") @Pattern(regexp = "\\b([0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])\\b")
     - cpf @NotBlank(message = "CPF da pessoa obrigatório.") @Size(max = 11) @Pattern(regexp = "(\\d{1,11})", message = "o CPF nao é válido.")
@@ -88,34 +88,8 @@ CustomerRepository extende a interfaz CrudRepository.
 #### Service
 - EmpresaService: serviço que trabalha com o repositório EmpresaRepository e contém a lógica para armazenar o objeto.
   - Métodos principais
-    - public Empresa salvar(Empresa empresa){
-        Optional<Empresa> optionalEmpresa = empresaRepository.findByCnpj(empresa.getCnpj());
-        if (optionalEmpresa.isPresent()) {
-            if (optionalEmpresa.get().getCnpj() == null) {
-                return empresaRepository.save(empresa);
-            } else {
-                System.out.println("repetida");
-                return null;
-            }
-        } else {
-            return empresaRepository.save(empresa);
-    - public Empresa atualizar(EmpresaDto empresaDto, String uuid) {
-        Optional<Empresa> optionalEmpresa = empresaRepository.findByUuid(uuid);
-        if (optionalEmpresa.isPresent()) {
-            String cnpj = empresaDto.getCnpj();
-            cnpj = ("00000000000000"+cnpj).substring(cnpj.length());
-            if (Objects.equals(optionalEmpresa.get().getCnpj(), cnpj)) { //coincidem uuid & cnpj
-                optionalEmpresa.get().setEmail(empresaDto.getEmail());
-                optionalEmpresa.get().setMcc(empresaDto.getMcc());
-                optionalEmpresa.get().setNomecontato(empresaDto.getNomecontato());
-                return empresaRepository.save(optionalEmpresa.get());
-            } else {
-                System.out.println("diferente cnpj");
-                return null;
-            }
-        } else {
-            System.out.println("nao existe uuid");
-            return null;
+    - public Empresa salvar: A partir do objeto Empresa passado, o método procura no BD se já existe com o CNPJ fornecido. Se não existe, guarda o objeto. Caso contrário, manda uma mensagem de empresa repetida
+    - public Empresa atualizar(EmpresaDto empresaDto, String uuid). A partir do objeto EmpresaDto validado, o método procura no BD se já existe com o UUID fornecido. Se não existe, retorna uma mensagem de empresa não existente. Se existe o UUID, se consulta a coincidência dos CNPJ para continuar com a atualização no BD do registro. Se o CNPJ é diferente daquele que se tenta atualizar retorna uma mensagem de CNPJ diferentes.
     - public Iterable<Empresa> listaEmpresa(){
         return empresaRepository.findAll();}
     - public Optional<Empresa> buscarPorUuid(String uuid){
