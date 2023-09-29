@@ -1,4 +1,10 @@
 # Desafio do Bootcamp Cielo
+Participante: Luis Ernesto Beingolea Delgado<br>
+Disclaimer: Nunca programei em Java nem OOP.<br>
+Em cada um dos desafios existe um read.me explicando
+a lógica utilizada para cada, os avanços realizados,
+e os pendentes para aperfeiçoar o miniprojeto, para um
+futuro (ToDo)
 ## [Desafio 1:](../../tree/main/desafio1)
 ### User Story: Pré-cadastro de clientes
 ## [Desafio 2:](../../tree/main/desafio2)
