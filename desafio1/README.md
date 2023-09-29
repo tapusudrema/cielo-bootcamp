@@ -6,7 +6,7 @@ c) Implementar cobertura de 70% de testes unitários
 ### Plataforma
 Spring Boot 3 / Java 17 / Maven / Tomcat / IntelliJ IDEA 2023
 ### Interfaz
-Swagger, entrando a [aq](http://localhost:8080/swagger-ui/index.html){:target="_blank" rel="noopener"}
+Para provar a aplicação, se entra na consola Swagger, via http://localhost:8080/swagger-ui/index.html
 ### Livrarias e dependências
 - springfox-boot-starter
 - spring-boot-starter-data-jpa: JPA (Java Persistence API) para armazenar dados em um banco de dados relacional. Usada para criar automaticamente implementações de repositórios, de uma interfaz de repositório.
