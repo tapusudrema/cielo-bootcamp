@@ -23,7 +23,7 @@ CustomerRepository extende a interfaz CrudRepository.
 - modelmapper: Para usar nos DTO's
 ### Classes e interfazes
 #### Entity
-- Empresa: classe final que extende a classe Usuario, definindo o objeto Empresa. O objeto criado se armazenará no banco de dados H2
+- Empresa: classe final que extende a classe Usuario, definindo o objeto Empresa. O objeto criado se armazenará no banco de dados H2 na tabela *empresa*
   - Características do objeto e do seu respectivo campo no BD
     - id inteiro autogerado em BD
     - uuid String, em BD: length = 36, nullable = false, name = "uuid". O UUID será usado em combinaçao com o CNPJ como chave par única, UUID tem maior complexidade que o ID autogerado, dando mais segurança.
@@ -41,7 +41,7 @@ CustomerRepository extende a interfaz CrudRepository.
     - public Empresa é um construtor do objeto, asignando um valor 0 ao id, uuid do método anterior, data do relógio do sistema, e os campos procedentes do DTO no uso
     - public String toStringE() retorna os campos do objeto como uma linha de texto
     
-- Pessoa: classe final que extende a classe Usuario, definindo o objeto Pessoa. O objeto criado se armazenará no banco de dados H2
+- Pessoa: classe final que extende a classe Usuario, definindo o objeto Pessoa. O objeto criado se armazenará no banco de dados H2 na tabela *pessoa*
   - Características do objeto e do seu respectivo campo no BD
     - id inteiro autogerado em BD
     - uuid String, em BD: length = 36, nullable = false, name = "uuid". O UUID será usado em combinaçao com o CPF como chave par única, UUID tem maior complexidade que o ID autogerado, dando mais segurança.
