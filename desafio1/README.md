@@ -7,7 +7,7 @@ c) Implementar cobertura de 70% de testes unitários
 Spring Boot 3 / Java 17 / Maven / Tomcat / IntelliJ IDEA 2023
 ### Livrarias e dependências
 - springfox-boot-starter
-- spring-boot-starter-data-jpa: JPA (Java Persistence API) para armazenar dadod em um banco de dados relacional. Usada para criar automaticamente implementações de repositórios, de uma interfaz de repositório.
+- spring-boot-starter-data-jpa: JPA (Java Persistence API) para armazenar dados em um banco de dados relacional. Usada para criar automaticamente implementações de repositórios, de uma interfaz de repositório.
 CustomerRepository extende a interfaz CrudRepository.
 - spring-boot-starter-web Implementação motor web Tomcat e Restful API
 - spring-boot-devtools: Ferramentas de desenvolvimento
@@ -66,25 +66,35 @@ CustomerRepository extende a interfaz CrudRepository.
   - Método principal
     - public toEmpresa() retorna um objeto do tipo Empresa passando os campos depois da validação (cnpj, razaosocial, mcc, cpf, nomecontato, email)
 - PessoaDto: classe reduzida da clase Pessoa, usada para validar os dados que foram inseridos na API
-    - Características do objeto e de suas respectivas validações e RegEx. Tomam os tipos e limites dos campos análogos da classe que reduz.
+  - Características do objeto e de suas respectivas validações e RegEx. Tomam os tipos e limites dos campos análogos da classe que reduz.
     - mcc @NotBlank(message = "MCC obrigatório.") @Pattern(regexp = "\\b([0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])\\b")
-    - cpf @NotBlank(message = "CPF da pessoa obrigatório.") @Size(max = 11) @Pattern(regexp = "(\\d{1,11})", message = "o CNPJ nao é válido.")
+    - cpf @NotBlank(message = "CPF da pessoa obrigatório.") @Size(max = 11) @Pattern(regexp = "(\\d{1,11})", message = "o CPF nao é válido.")
     - nome @NotBlank(message = "Nome da pessoa obrigatório.")
     - email @NotBlank(message = "Email obrigatório.") @Pattern(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\\.)+[A-Z]{2,6}$", flags = {Flag.CASE_INSENSITIVE, Flag.MULTILINE}, message = "o email nao é válido.")
   - Método principal
     - public toPessoa() retorna um objeto do tipo Pessoa passando os campos depois da validação (cpf, mcc, nome, email)
-
+#### Repository
+- EmpresaRepository: interfaz repositório que extende CrudRepository<Empresa, Long> para funções de busca em BD
+  - Métodos principais
+    - findByUuid(String uuid) retorna um recordset segundo a coincidencia do parámetro uuid com o campo uuid na BD
+    - findByCpf(String cpf); retorna um recordset segundo a coincidencia do parámetro cpf com o campo cpf na BD
+    - findByCnpj(String cnpj) retorna um recordset segundo a coincidencia do parámetro cnpj com o campo cnpj na BD
+    - deleteByUuid(String uuid) elimina um registro segundo a coincidencia do parámetro uuid com o campo uuid na BD
+- PessoaRepository
+  - Métodos principais
+    - findByUuid(String uuid) retorna um recordset segundo a coincidencia do parámetro uuid com o campo uuid na BD
+    - findByCpf(String cpf); retorna um recordset segundo a coincidencia do parámetro cpf com o campo cpf na BD
+    - findByCnpj(String cnpj) retorna um recordset segundo a coincidencia do parámetro cnpj com o campo cnpj na BD
+    - deleteByUuid(String uuid) elimina um registro segundo a coincidencia do parámetro uuid com o campo uuid na BD
 #### Controller
 - EmpresaController
 - PessoaController
-#### Repository
-- EmpresaRepository
-- PessoaRepository
 #### Service
 - Desafio1Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
 - Validar se o CPF atende as normas brasileiras de contruçao de tal cadastro
 - Otimizar o uso de métodos comuns
+- Utilizar um banco de dados mais poderoso, e tentar usar comandos SQL, para passar a carga de BD para fora da aplicação Java
 - Aperfeiçoar os testes unitários
 ## [Desafio 1:](../../tree/main/desafio1)
