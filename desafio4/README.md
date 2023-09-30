@@ -48,7 +48,13 @@ CustomerRepository extende a interfaz CrudRepository.
 - PessoaService: serviço que trabalha com o repositório PessoaRepository e contém a lógica para armazenar o objeto. IDÊNTICO AO DO DESAFIO 3.
 - SingledLinkedList: serviço que fornece métodos para fazer uma lista com objetos da classe Nodo. IDÊNTICO AO DO DESAFIO 3.
 - SqsManualContainerInstantiation: serviço com métodos para enviar dados na fila SQS. IDÊNTICO AO DO DESAFIO 3.
-- SecurityConfiguration
+- SecurityConfiguration: serviço com métodos para implementar segurança pedindo usuário e senha ao requerir dados das empresas e pessoas.
+  - public SecurityFilterChain securityFilterChain(HttpSecurity http): Contrui um conjunto de regras para segurança, explicitando os métodos e *paths* liberados e restritos. Deviso ao uso de H2, o Swagger falha, e teve que se dar os acessos liberados para o Swagger e H2. Usando outro motor de BD evitaria o uso de exceçoes.
+  - public InMemoryUserDetailsManager userDetailsService() Cria um usuário válido para ser usado e autenticar nos acessos às chamadas API restritas pela segurança implantada. Os valores de teste para este aplicativo foram
+    - username: cielo
+    - password: CIELO
+    - roles: USUARIO
+  - public WebSecurityCustomizer webSecurityCustomizer(): Adiciona exceçoes para evitar problemas com SecurityFilterChain e Swagger baseado em H2
 
 #### Controller
 - EmpresaController: Restcontroller que faz mapeamento das petições para /empresa.  IDÊNTICO AO DO DESAFIO 3.
@@ -56,9 +62,5 @@ CustomerRepository extende a interfaz CrudRepository.
 - FilaController: Restcontroller que faz mapeamento das petições para /fila/aws.  IDÊNTICO AO DO DESAFIO 3.
 #### Desafio4Application: Inicializador da aplicação
 ### To-Do
-- Pesquisar mais com Amazon de como percorrer uma fila SQS para poder localizar um elemento e eliminar, para poder atualizar a fila com as condiçoes do desafio 2
-- Depois de validar as pesquisas, retirar o código da lista simples enlazada SingledLinkedList herdada do desafio 2
-- Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
-- Validar se o CPF atende as normas brasileiras de contruçao de tal cadastro
-- Otimizar o uso de métodos comuns
-- Utilizar um banco de dados mais poderoso, e tentar usar comandos SQL, para passar a carga de BD para fora da aplicação Java, e dar persistência à informaçao
+- Pode se adicionar mais camadas de segurança, como usar tokens. Mais tempo e requerimentos específicos permitiriam fazé-lo.
+- Modificar os dados de username e senha para que sejam mais complexos (senha encriptada) e em BD para ter múltiplos usuários.
