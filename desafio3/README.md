@@ -63,47 +63,14 @@ CustomerRepository extende a interfaz CrudRepository.
   - public static final String FILA_SQS_AWS = "mi.fifo"; SQS do tipo FIFO em AWS
   - private static final Logger LOGGER = LoggerFactory.getLogger(SqsManualContainerInstantiation.class)
   - public SqsTemplate sqsTemplateManualContainerInstantiation(SqsAsyncClient sqsAsyncClient) Instanciador
-    public record TipoNodo(String tipo, String uuid) {
-    }
-
-    public final SqsAsyncClient sqsAsyncClient;
-    public SqsManualContainerInstantiation(SqsAsyncClient sqsAsyncClient) {
-        this.sqsAsyncClient = sqsAsyncClient;
-    }
-
-    public SendResult<Object> EnviaSQS(SqsAsyncClient sqsAsyncClient2,
-                                       String uuid, String tipo, Boolean envia) throws ExecutionException, InterruptedException {
-        if (envia) {
-            SqsTemplate sqsTemplate = sqsTemplateManualContainerInstantiation(sqsAsyncClient2);
-            LOGGER.info("Enviando mensagem");
-            SendMessageRequest sendMessageRequest = SendMessageRequest.builder()
-                    .build();
-            return sqsTemplate.send(to -> to.queue(FILA_SQS_AWS)
-                    .payload(new TipoNodo(tipo, uuid)));
-        } else {return null;}
-    }
-
-
-    public List<software.amazon.awssdk.services.sqs.model.Message> ListSQS2(SqsAsyncClient sqsAsyncClient2) throws ExecutionException, InterruptedException {
-        SqsTemplate sqsTemplate = sqsTemplateManualContainerInstantiation(sqsAsyncClient2);
-        ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
-                .visibilityTimeout(10)
-                .build();
-        List<software.amazon.awssdk.services.sqs.model.Message> mensagens = sqsAsyncClient2
-                .receiveMessage(receiveMessageRequest).get().messages();
-        return mensagens;
-    }
-
-
-
-    public Optional<org.springframework.messaging.Message<?>> ElementoSQS(SqsAsyncClient sqsAsyncClient2)  {
-        SqsTemplate sqsTemplate = sqsTemplateManualContainerInstantiation(sqsAsyncClient2);
-        ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
-                .visibilityTimeout(1)
-                .build();
-        return sqsTemplate.receive(from -> from.queue(FILA_SQS_AWS));
-   }
-}
+  - public record TipoNodo(String tipo, String uuid) Tipo de nodo para colocar na fila, é um objeto com 2 características String, uma o tipo de usuário (E para empresa, P para pessoa) e o UUID do usuário
+  - public final SqsAsyncClient sqsAsyncClient Cliente assíncrono SQS
+  - public EnviaSQS() Manda os dados para ser colocados na fila AWS. É o método que realmente faz o PUSH
+  - public ListSQS2(SqsAsyncClient sqsAsyncClient2) Método que busca obter a lista de mensagens no SQS
+  - ### J
+  - ## 2
+  - # 1
+  - public Optionalz\<Message\<?\>\> ElementoSQS(SqsAsyncClient sqsAsyncClient2) Método que extrai o primeiro elemento da fila SQS (PUSH)
 #### Controller
 - EmpresaController: Restcontroller que faz mapeamento das petições para /empresa. Os métodos usados são:
   - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED *e coloca no final da fila*.
