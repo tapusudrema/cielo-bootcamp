@@ -1,0 +1,5 @@
+# Created at 2023-09-22T22:09:35.500
+Boot Manifest-JAR contains absolute paths in classpath 'D:\Dropbox\leb\varios\Sueltos\docs\Ada\1049\Bootcamp - Pasta Geral\demoluis\demoluis\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
