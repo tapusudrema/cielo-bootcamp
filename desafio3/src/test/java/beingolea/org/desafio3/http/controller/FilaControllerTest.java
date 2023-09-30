@@ -66,7 +66,7 @@ class FilaControllerTest {
 
     @Test
     void enfileirarAWS() throws ExecutionException, InterruptedException {
-        String resultado = filaController.enfileirarAWS();
+        String resultado = filaController.avancarAWS();
         assertEquals(resultado,null,"Conforme");
     }
 }

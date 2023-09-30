@@ -1,13 +1,11 @@
-package org.beingolea.demoluis.entity;
+package beingolea.org.desafio3.entity;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import org.assertj.core.api.Assertions.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import software.amazon.awssdk.services.sqs.endpoints.internal.Value;
 
 import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class EmpresaTest {

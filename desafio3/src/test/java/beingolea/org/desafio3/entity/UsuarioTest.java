@@ -1,6 +1,4 @@
-package org.beingolea.demoluis.entity;
-
-import static org.junit.jupiter.api.Assertions.*;
+package beingolea.org.desafio3.entity;
 
 class UsuarioTest {
 
