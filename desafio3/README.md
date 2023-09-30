@@ -87,7 +87,7 @@ CustomerRepository extende a interfaz CrudRepository.
   - public String filaAWS(): Recebe via método GET em /fila/aws o requerimento e retorna o conjunto de elementos da fila SQS. Sua funcionalide depende de Amazon, como comentado linhas acima; pelo tempo do desafio, faltou pesquisar mais.
   - public String avancarAWS(): Recebe via método GET em /fila/avancar e pega o primeiro elemento da fila SQS, eliminando ele dela, retornando com HttpStatus OK em formato String  @ResponseStatus(HttpStatus.OK)
 
-#### Desafio1Application: Inicializador da aplicação
+#### Desafio3Application: Inicializador da aplicação
 ### To-Do
 - Pesquisar mais com Amazon de como percorrer uma fila SQS para poder localizar um elemento e eliminar, para poder atualizar a fila com as condiçoes do desafio 2
 - Depois de validar as pesquisas, retirar o código da lista simples enlazada SingledLinkedList herdada do desafio 2
