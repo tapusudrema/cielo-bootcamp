@@ -1,4 +1,4 @@
-package org.beingolea.demoluis.repository;
+package beingolea.org.desafio4.repository;
 
 import org.junit.jupiter.api.Test;
 
