@@ -26,48 +26,84 @@ CustomerRepository extende a interfaz CrudRepository.
   - spring.cloud.aws.endpoint=https://sqs.us-east-1.amazonaws.com/xxxxxxxxxx/mi.fifo
   - spring.cloud.aws.region.static=us-east-1
   - spring.cloud.aws.credentials.access-key=xxxxxxxxxxxxxxxx
-spring.cloud.aws.credentials.secret-key=Slg+DqQP6JUrVRjLUszOwePcnpIxlPwKlz04ZKi4
+  - spring.cloud.aws.credentials.secret-key=xxxxxxxxxxxxxxxxxxxxxxxxxx
 ### Classes e interfazes
 #### Entity
 - Empresa: classe final que extende a classe Usuario, definindo o objeto Empresa. O objeto criado se armazenará no banco de dados H2 na tabela *empresa*
-  - Características do objeto e do seu respectivo campo no BD. AS MESMAS DO DESAFIO 1
-  - Métodos principais. OS MESMOS DO DESAFIO 1
+  - Características do objeto e do seu respectivo campo no BD. AS MESMAS DO DESAFIO 2
+  - Métodos principais. OS MESMOS DO DESAFIO 2
     
 - Pessoa: classe final que extende a classe Usuario, definindo o objeto Pessoa. O objeto criado se armazenará no banco de dados H2 na tabela *pessoa*
-  - Características do objeto e do seu respectivo campo no BD. AS MESMAS DO DESAFIO 1
-  - Métodos principais. OS MESMOS DO DESAFIO 1
+  - Características do objeto e do seu respectivo campo no BD. AS MESMAS DO DESAFIO 2
+  - Métodos principais. OS MESMOS DO DESAFIO 2
 - Usuario: classe com dois herdeiros.
   - Características do objeto:
-    - public static SingledLinkedList fila = new SingledLinkedList(). Cria um objeto comum que será a fila dos usuários
+    - public static SingledLinkedList fila = new SingledLinkedList(). Cria um objeto comum que será a fila dos usuários. *A FILA FICOU APENAS COMO HERANÇA DO DESAFIO ANTERIOR, OS ELEMENTOS NAO SERAO COLOCADOS AÍ*
+    - public static SqsManualContainerInstantiation sqs Cria um objeto comum que servirá para instanciar a fila SQS para manipular as mensagens
 #### DTO
 - EmpresaDto: classe reduzida da clase Empresa, usada para validar os dados obrigatórios que foram inseridos na API
-  - Características do objeto AS MESMAS DO DESAFIO 1
-  - Método principal O MESMO DO DESAFIO 1
+  - Características do objeto AS MESMAS DO DESAFIO 2
+  - Método principal O MESMO DO DESAFIO 2
 - PessoaDto: classe reduzida da clase Pessoa, usada para validar os dados obrigatórios que foram inseridos na API
-  - Características do objeto AS MESMAS DO DESAFIO 1
-  - Método principal O MESMO DO DESAFIO 1
+  - Características do objeto AS MESMAS DO DESAFIO 2
+  - Método principal O MESMO DO DESAFIO 2
 #### Repository
 - EmpresaRepository: interfaz repositório que extende CrudRepository\<Empresa, Long\> para funções de busca em BD
-  - Métodos principais OS MESMOS DO DESAFIO 1
-- PessoaRepository OS MESMOS DO DESAFIO 1
+  - Métodos principais OS MESMOS DO DESAFIO 2
+- PessoaRepository OS MESMOS DO DESAFIO 2
 #### Service
 - EmpresaService: serviço que trabalha com o repositório EmpresaRepository e contém a lógica para armazenar o objeto.
-  - Métodos principais OS MESMOS DO DESAFIO 1
+  - Métodos principais OS MESMOS DO DESAFIO 2
 - PessoaService: serviço que trabalha com o repositório PessoaRepository e contém a lógica para armazenar o objeto.
-  - Métodos principais OS MESMOS DO DESAFIO 1
+  - Métodos principais OS MESMOS DO DESAFIO 2
 - SingledLinkedList: serviço que fornece métodos para fazer uma lista com objetos da classe Nodo
-  - Características do objeto
-    - public class Nodo (String info; String tipo;Nodo seguinte)
-    - public Nodo(String info, String tipo) Construtor
-    - public SingledLinkedList() {this.cabeca = null; this.cola = null;} Instanciador
-    - public Nodo cabeca = null; Cabeca e cola da lista:
-    - public Nodo cola = null; Cola da lista:
-  - Métodos principais
-    - public void enfileirar(String info, String tipo). Adiciona um novo nodo na lista ao final (PUSH)
-    - public String retirarCabeca() Extrai o primeiro elemento da lista (POP)
-    - public void atualizar(String info, String tipo) Percorre a lista para localizar um nodo e atualizar
-    - public void mostrar() Percorre a lista devolvendo como String um conjunto de linhas de texto onde cada representa o texto do nodo
-    - public List\<Nodo\> listar() Convertir a lista em tipo List para retornar um iterável. Usado apenas com finalidad de *display*
+  - Características do objeto O MESMOS DO DESAFIO 2
+  - Métodos principais OS MESMOS DO DESAFIO 2
+- SqsManualContainerInstantiation: serviço com métodos para enviar dados na fila SQS
+  - public static final String FILA_SQS_AWS = "mi.fifo"; SQS do tipo FIFO em AWS
+  - private static final Logger LOGGER = LoggerFactory.getLogger(SqsManualContainerInstantiation.class)
+  - public SqsTemplate sqsTemplateManualContainerInstantiation(SqsAsyncClient sqsAsyncClient) Instanciador
+    public record TipoNodo(String tipo, String uuid) {
+    }
+
+    public final SqsAsyncClient sqsAsyncClient;
+    public SqsManualContainerInstantiation(SqsAsyncClient sqsAsyncClient) {
+        this.sqsAsyncClient = sqsAsyncClient;
+    }
+
+    public SendResult<Object> EnviaSQS(SqsAsyncClient sqsAsyncClient2,
+                                       String uuid, String tipo, Boolean envia) throws ExecutionException, InterruptedException {
+        if (envia) {
+            SqsTemplate sqsTemplate = sqsTemplateManualContainerInstantiation(sqsAsyncClient2);
+            LOGGER.info("Enviando mensagem");
+            SendMessageRequest sendMessageRequest = SendMessageRequest.builder()
+                    .build();
+            return sqsTemplate.send(to -> to.queue(FILA_SQS_AWS)
+                    .payload(new TipoNodo(tipo, uuid)));
+        } else {return null;}
+    }
+
+
+    public List<software.amazon.awssdk.services.sqs.model.Message> ListSQS2(SqsAsyncClient sqsAsyncClient2) throws ExecutionException, InterruptedException {
+        SqsTemplate sqsTemplate = sqsTemplateManualContainerInstantiation(sqsAsyncClient2);
+        ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
+                .visibilityTimeout(10)
+                .build();
+        List<software.amazon.awssdk.services.sqs.model.Message> mensagens = sqsAsyncClient2
+                .receiveMessage(receiveMessageRequest).get().messages();
+        return mensagens;
+    }
+
+
+
+    public Optional<org.springframework.messaging.Message<?>> ElementoSQS(SqsAsyncClient sqsAsyncClient2)  {
+        SqsTemplate sqsTemplate = sqsTemplateManualContainerInstantiation(sqsAsyncClient2);
+        ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
+                .visibilityTimeout(1)
+                .build();
+        return sqsTemplate.receive(from -> from.queue(FILA_SQS_AWS));
+   }
+}
 #### Controller
 - EmpresaController: Restcontroller que faz mapeamento das petições para /empresa. Os métodos usados são:
   - public ResponseEntity\<Empresa\> salvar. Recebe via POST dados como objeto validado EmpresaDto. Se a validação do objeto falha, retorna mensagem de erro de inserção (BAD REQUEST). Se no momento de salvar a empresa já existe no BD, retorna mensagem de erro de inserção (BAD REQUEST). Caso contrário, consigue armazenar no BD e retorna um HttpStatus CREATED *e coloca no final da fila*.
