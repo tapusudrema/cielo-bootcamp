@@ -80,7 +80,7 @@ CustomerRepository extende a interfaz CrudRepository.
   - public String listaFila() Recebe via método GET o requerimento e retorna o conjunto de usuários na fila com HttpStatus OK em formato String, usa o método listar do objeto SingledLinkedList para extrair em formato String.
   - public String avancarFila() Recebe via método GET o requerimento e retorna o primeiro usuário na fila, extraindo dela, com HttpStatus OK em formato String
 
-#### Desafio1Application: Inicializador da aplicação
+#### Desafio2Application: Inicializador da aplicação
 ### To-Do
 - Validar se o CNPJ atende as normas brasileiras de contruçao de tal cadastro
 - Validar se o CPF atende as normas brasileiras de contruçao de tal cadastro
