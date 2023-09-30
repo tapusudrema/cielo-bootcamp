@@ -67,9 +67,7 @@ CustomerRepository extende a interfaz CrudRepository.
   - public final SqsAsyncClient sqsAsyncClient Cliente assíncrono SQS
   - public EnviaSQS() Manda os dados para ser colocados na fila AWS. É o método que realmente faz o PUSH
   - public ListSQS2(SqsAsyncClient sqsAsyncClient2) Método que busca obter a lista de mensagens no SQS
-  - ### J
-  - ## 2
-  - # 1
+  - # O modelo de AWS com as filas SQS é um sistema repartido em vários servidores no mundo. Tentar obter a lista gerava dois caminhos dependendo do método. Um conseguia a lista, mas apagava dos servidores, era como fazer um POP de todos os elementos. O segundo método conseguia alguns poucos, aleatoriamente, dependendo do servidor do mundo. Nenhum dos dois foi útil para tentar ser usado para localizar um nodo de um usuário atualizado e eliminar com um código Handle que traz, e fazer PUSH do elemeno.Optou se por fazer outra vez o PUSH do elemento atualizado, considerando que AWS nao permite 2 mensagens iguais na mesma fila, e tentando ver a forma de que o novo PUSH elimine o duplicado ou mande ele no final. Pendente.
   - public Optionalz\<Message\<?\>\> ElementoSQS(SqsAsyncClient sqsAsyncClient2) Método que extrai o primeiro elemento da fila SQS (PUSH)
 #### Controller
 - EmpresaController: Restcontroller que faz mapeamento das petições para /empresa. Os métodos usados são:
